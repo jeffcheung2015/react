@@ -1,20 +1,32 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
-import axios from "axios/index";
-import { Button, Typography } from "@mui/material/index";
+import axios from "axios";
+import { Button, Typography } from "@mui/material";
 
 function App() {
   const [user, setUser] = useState("");
   const [showUser, setShowUser] = useState(false);
   useEffect(() => {
+    console.log("Called everytime when showUser value changes");
     const run = async () => {
-      const getUserRes = await axios.get("localhost:8080/user");
-      console.log("getUserRes", getUserRes.data);
+      try {
+        const getUserRes = await axios.get("http://localhost:8080/user");
+        console.log("getUserRes", getUserRes.data);
 
-      setUser(getUserRes.data.user);
+        setUser(getUserRes.data.user);
+      } catch (err) {
+        console.log(err);
+      }
     };
-    run();
+
+    if (showUser) {
+      run();
+    }
+  }, [showUser]);
+
+  useEffect(() => {
+    console.log("Called Once");
   }, []);
 
   const onLoginClick = () => {
@@ -27,7 +39,7 @@ function App() {
         <p>
           user:{" "}
           {showUser ? (
-            <Typography>{user}</Typography>
+            <Typography>{user} welcome back!!</Typography>
           ) : (
             <Typography>Not logged in</Typography>
           )}
