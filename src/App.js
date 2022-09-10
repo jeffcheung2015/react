@@ -3,12 +3,12 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Typography } from "@mui/material";
-
+import moment from "moment";
 function App() {
   const [user, setUser] = useState("");
-  const [showUser, setShowUser] = useState(false);
+  const [loginCounter, setLoginCounter] = useState(0);
   useEffect(() => {
-    console.log("Called everytime when showUser value changes");
+    console.log("Called everytime when loginCounter value changes");
     const run = async () => {
       try {
         const getUserRes = await axios.get("http://localhost:8080/user");
@@ -20,17 +20,17 @@ function App() {
       }
     };
 
-    if (showUser) {
+    if (loginCounter) {
       run();
     }
-  }, [showUser]);
+  }, [loginCounter]);
 
   useEffect(() => {
     console.log("Called Once");
   }, []);
 
   const onLoginClick = () => {
-    setShowUser(true);
+    setLoginCounter(loginCounter + 1);
   };
   return (
     <div className="App">
@@ -38,8 +38,11 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           user:{" "}
-          {showUser ? (
-            <Typography>{user} welcome back!!</Typography>
+          {user !== "" ? (
+            <Typography>
+              {user} welcome back!! last login time:{" "}
+              {moment().format("DD-MMM-YYYY HH:mm:ss")}
+            </Typography>
           ) : (
             <Typography>Not logged in</Typography>
           )}
